@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.4": canvas
+#import "@preview/cetz:0.3.4"
 
 /// Describe one stage in an experimental sequence.
 ///
@@ -38,13 +38,13 @@
   let line-y = timing-y - 0.30
   let arrow-end = total-width
 
-  canvas(length: 1cm, {
-    import cetz.draw: *
+  cetz.canvas(length: 1cm, {
+    import cetz.draw: circle, content, line, mark, rect
 
-    for (i, item) in stages.enumerate() {
+    // Paint panels from right to left so earlier stages cover later frames.
+    for offset in range(stages.len()) {
+      let i = stages.len() - offset - 1
       let x = i * step
-      let cx = x + stage-width / 2
-      let title = if type(item.title) == str { item.title } else { item.title }
       let p0 = (x, 0)
       let p1 = (x + 0.10, top)
       let p2 = (x + stage-width, top - 0.02)
@@ -55,8 +55,13 @@
       } else {
         rect((x, -0.30), (x + stage-width, top), stroke: (paint: stroke, thickness: line-width), fill: fill)
       }
+    }
 
-      content((cx, header-y), text(size: font-size, weight: "bold", align: center)[#title], anchor: "south")
+    // Add labels and stimulus content over the completed panel layer.
+    for (i, item) in stages.enumerate() {
+      let x = i * step
+      let cx = x + stage-width / 2
+      content((cx, header-y), align(center, text(size: font-size, weight: "bold")[#item.title]), anchor: "south")
       if item.display != none {
         content((cx, top / 2 - 0.12), item.display)
       }
@@ -66,7 +71,9 @@
     }
 
     if arrow {
-      line((-0.15, line-y), (arrow-end + 0.15, line-y), stroke: (paint: stroke, thickness: line-width), mark: (end: "stealth", start: "circle"))
+      line((-0.15, line-y), (arrow-end + 0.15, line-y), stroke: (paint: stroke, thickness: line-width))
+      circle((-0.15, line-y), radius: 0.035, fill: stroke, stroke: none)
+      mark((arrow-end + 0.15, line-y), 0deg, symbol: ">", scale: 1.4, stroke: black)
     }
   })
 }
