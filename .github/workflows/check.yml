@@ -1,0 +1,56 @@
+name: Package and documentation checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        typst: ['0.13.1', '0.15.0']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: typst-community/setup-typst@v4
+        with:
+          typst-version: ${{ matrix.typst }}
+      - name: Check geometry and examples
+        run: python3 tests/check.py
+      - name: Check isolated release package
+        run: python3 scripts/release.py --check
+      - name: Run official Universe package checker
+        if: matrix.typst == '0.15.0'
+        run: docker run --rm -v "$PWD/build/submission/preview/neurona/0.1.0:/data" ghcr.io/typst/package-check:0.7.0 check
+      - uses: actions/upload-artifact@v4
+        if: matrix.typst == '0.15.0'
+        with:
+          name: neurona-release-candidate
+          path: |
+            build/submission/
+            build/neurona-0.1.0-candidate.zip
+            build/release-check.json
+
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: typst-community/setup-typst@v4
+        with:
+          typst-version: '0.15.0'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: docs/site/package-lock.json
+      - run: npm ci
+        working-directory: docs/site
+      - run: npm run build
+        working-directory: docs/site
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
