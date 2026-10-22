@@ -60,6 +60,7 @@ def main():
     for slug, example in manifest.items():
         assert (DIST / 'files' / f'{slug}.typ').read_text() == example['source'], slug
         assert (DIST / 'files' / f'{slug}.svg').stat().st_size > 0, slug
+        assert (DIST / 'files' / f'{slug}.pdf').read_bytes().startswith(b'%PDF-'), slug
     with zipfile.ZipFile(DIST / 'files/neurona-starter.zip') as archive:
         assert archive.testzip() is None
         for slug, example in manifest.items():

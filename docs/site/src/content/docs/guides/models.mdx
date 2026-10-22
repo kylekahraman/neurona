@@ -1,96 +1,81 @@
 ---
 title: Models and architectures
-description: Draw abstract models, mathematical relationships, and neural network architectures without requiring neurons.
+description: Draw model architectures as perspective activity planes, with explicit signal flow and feedback across time.
 ---
 import Example from '../../../components/Example.astro';
 
-Use `diagram` for a model made of functional blocks, state nodes, equations,
-and connections. No biological neurons are required. It uses the same canvas
-as `circuit`, so abstract components and biological cells can also be mixed.
+Build architectures from activity planes, state arrays, mathematical components,
+and explicit connections. Biological neurons are optional.
 
-## Start with two components
+## Feedback across time
 
-In a file beside `lib.typ`:
+The same architecture repeats in each row. Feedforward signals travel left to
+right; dashed feedback paths enter the next time step.
+
+<Example name="feedback-model" collapsed architecture />
+
+This model has two feedback paths: Layer 2 feeds the next step's Layer 1,
+and Layer 1 feeds the next step's Input. The figure preserves those connections
+without imposing an update equation.
+
+## Layers and representations
+
+Use `model-layer` for the perspective planes seen in architecture figures.
+Control the plane count, face dimensions, slant, dot grid, and colors.
+Plane and dot counts are schematic; add actual model dimensions as labels.
+
+<Example name="network-architecture" collapsed architecture />
+
+Start with two layers in a file beside `lib.typ`:
 
 ```typst
-#import "lib.typ": diagram, block, link
+#import "lib.typ": diagram, model-layer, link
 #set page(width: auto, height: auto, margin: 5mm)
 #diagram(
   nodes: (
-    block("input", $x$, at: (0, 0)),
-    block("model", $y = f(x)$, at: (3.5, 0)),
+    model-layer("input", at: (0, 0), planes: 1, body: [$x$]),
+    model-layer("hidden", at: (3.5, 0), planes: 4, body: [$h$]),
   ),
-  connections: (link("input.east", "model.west"),),
-  width: 85mm,
+  connections: (link("input.east", "hidden.west"),),
+  width: 100mm,
 )
 ```
 
-`at` places a component's center. Coordinates increase right and up; dimensions
-use canvas units (`unit: 1cm` by default). Set a block's `width` and `height`
-to leave room for its content. `diagram(width: ...)` fits the complete figure,
-including its labels, to a physical output width.
+`at` places the front face's center. Coordinates increase right and up;
+dimensions use canvas units (`unit: 1cm` by default). `diagram(width: ...)`
+sets the complete figure's physical output width, including its labels.
 
-## Unroll a model across time
+## Equations and recurrence
 
-Place the same components in successive columns. Feedforward arrows run
-within a column; feedback arrows enter the next column. In this example,
-Layer 2 feeds the next step's Layer 1, and Layer 1 feeds the next step's Input.
-The drawing specifies these connections without imposing update equations.
+Use `block` for mathematical operations and native Typst equations. Connect
+distinct ports with Bezier `controls` to draw recurrent paths.
 
-<Example name="feedback-model" />
+<Example name="rate-model" collapsed />
 
-The groups are background frames with explicit positions and dimensions.
-They do not move their contents or create connections. To add a step, change
-all three `range(3)` expressions to `range(4)`, change `range(2)` to `range(3)`,
-and extend the time axis and annotation positions to fit the fourth column.
+## Hidden and observed states
 
-## Include equations and recurrence
+For graphical models, `node` supplies circular states. Background `group`
+frames can distinguish latent dynamics from observations.
 
-A block body can contain ordinary Typst content, including native math.
-For recurrence, connect two ports on the same block and provide Bezier
-`controls` outside it. This avoids drawing a zero-length connection.
+<Example name="state-model" collapsed />
 
-<Example name="rate-model" />
+## Connections and composition
 
-## Draw hidden and observed states
+`link` draws a directed signal-flow arrow. Use `dashed: true` to distinguish
+feedback and `directed: false` for unmarked relationships. `label: [$W$]`
+adds a mathematical label. Routes accept either `via` waypoints or one/two
+Bezier `controls`; position them explicitly to leave room around components.
 
-`node` supplies circular states with the same named directional ports as
-blocks. Color and grouping can distinguish latent states and observations.
-Use your caption to define what the arrows mean in your model.
+Every node has directional ports such as `east`, `west`, `north`, and `south`.
+On perspective layers these follow the actual front/rear plane geometry.
+Custom `ports` specify offsets from the component center when a model needs
+separate inputs or outputs.
 
-<Example name="state-model" />
+Use `diagram` to combine activity planes, blocks, circular states, biological
+cells, and regional layers on the same canvas. All connectable elements need
+unique IDs. Use `projection` for a biological connection with an excitatory
+arrow or inhibitory bar.
 
-## Compose a neural network architecture
-
-Use Typst loops to generate repeated units and explicit connections. Here,
-three inputs connect to every hidden unit, and the hidden layer feeds a
-readout block. Custom input ports separate incoming arrowheads.
-
-<Example name="network-architecture" />
-
-## Route and label connections
-
-`link` draws a neutral directed arrow: it makes no excitatory or inhibitory
-claim. Use `directed: false` for an unmarked line. It accepts the same `via`,
-`controls`, `dashed`, `label`, `label-at`, `label-offset`, `weight`, and
-`target-gap` options as `projection`. Labels can contain math such as `[$W$]`.
-
-A node or block exposes `north`, `south`, `east`, `west`, `center`, and four
-corner ports. Define custom ports with `ports: (input: (-1, 0.2))` and connect
-to `"component.input"`. Custom coordinates are offsets from the component's
-center. Choose offsets on the visible boundary; the renderer does not snap
-them to the outline.
-
-Groups may be nested visually: list the outer frame first and place inner
-frames afterward. Positions remain in the common canvas coordinates.
-
-For a mixed figure, pass `neurons`, `regions`, or `populations` to `diagram`
-alongside `nodes`. All connectable elements need unique IDs. Use `projection`
-when a biological connection needs an excitatory arrow or inhibitory bar.
-
-These functions draw architectures and relationships. They do not execute
-models, infer connectivity, or automatically route around objects. Stacked
-convolutional feature-map glyphs are not built in yet.
-
-See the [Models API](/neurona/reference/models/) for defaults and ports, and
-[Styling and export](/neurona/guides/styling-and-export/) for PDF, SVG, and PNG.
+See the [Models API](/neurona/reference/models/) for parameters and port
+positions, and [Styling and export](/neurona/guides/styling-and-export/) for
+PDF, SVG, and PNG output.

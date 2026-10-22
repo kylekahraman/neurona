@@ -3,7 +3,7 @@ title: Models API
 description: Abstract blocks, circular states, groups, and directed signal-flow links.
 ---
 
-Import `diagram`, `block`, `node`, `group`, and `link` from `lib.typ`.
+Import `diagram`, `model-layer`, `block`, `node`, `group`, and `link` from `lib.typ`.
 They are also available through the `models` module.
 
 ## diagram
@@ -17,6 +17,31 @@ This is the shared circuit renderer, with no required biological elements.
 `width`, `unit`, `font-size`, and `line-width` behave identically. Block and
 node bodies use native Typst text/math; dimensions are explicit and do not
 automatically grow to fit the content.
+
+## model-layer
+
+```typst
+model-layer(id, body: none, at: (0, 0), width: 0.9, height: 1.8,
+  planes: 3, offset: (0.14, 0.1), slant: 0.25, grid: (4, 6),
+  fill: rgb("e6f0f2"), color: rgb("397986"), ports: (:))
+```
+
+A perspective array of activity planes for architectural figures. Rear planes
+are drawn first; the front face contains the optional dot grid. `planes` is
+a positive integer. `offset` gives nonnegative horizontal/vertical separation
+between planes. `slant` tilts the horizontal edges upward to the right.
+`grid` gives positive column/row counts; use `grid: none` for plain planes.
+`fill` and `color` supply the face and outline/activity colors.
+
+`at` is the front face's center. Width and height describe that face; the
+complete stack also includes its slant and rear-plane offsets. An optional
+`body` label sits beneath the front face. Dot density and plane count are
+editable schematic choices; annotate actual model dimensions separately.
+
+Directional ports land on the visible stack boundary: `east` on the front
+right edge, `west` on the rear left edge, `north` at the rear top, and `south`
+at the front bottom. Corner ports also follow the projected plane geometry.
+Custom ports remain offsets from the front face's center.
 
 ## block
 
@@ -41,7 +66,7 @@ A circular state or computational unit. `radius` must be positive.
 
 ## Ports and IDs
 
-Both constructors expose `north`, `south`, `east`, `west`, `center`,
+All three node constructors expose `north`, `south`, `east`, `west`, `center`,
 `north-east`, `north-west`, `south-east`, and `south-west`.
 
 Circle diagonal ports sit on the circumference at 45 degrees. Block corner

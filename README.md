@@ -33,7 +33,7 @@ For a small six-layer example, start with [quickstart.typ](examples/quickstart.t
 ```
 
 `diagram` uses the same renderer as `circuit`. Add `node` for circular states,
-`group` for background frames, and mathematical content in block bodies or
+`model-layer` for perspective activity planes, `group` for background frames, and mathematical content in block bodies or
 connection labels. `link` represents directed signal flow without a biological
 sign. Neurons are optional and can be mixed with abstract nodes. Positions,
 component sizes, and connection routes are explicit.
