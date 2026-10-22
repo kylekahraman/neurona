@@ -14,7 +14,7 @@
   id, at: (0, 0), kind: "pyramidal", label: none,
   label-offset: (0.4, 0.3), color: rgb("344c66"),
   apical: 3.4, basal: 1.1, spread: 0.9, scale: 1,
-  orientation: 0deg, detail: "branched", axon-origin: "bottom", dendrites: (), axons: (), ports: (:),
+  orientation: 0deg, detail: "minimal", axon-origin: "bottom", dendrites: (), axons: (), ports: (:),
 ) = (
   id: id, at: at, kind: kind, label: label, label-offset: label-offset,
   color: color, apical: apical, basal: basal, spread: spread, scale: scale,
@@ -71,7 +71,7 @@
     let on-curve(start, control, end, t) = range(2).map(i =>
       (1 - t) * (1 - t) * start.at(i) + 2 * (1 - t) * t * control.at(i) + t * t * end.at(i))
     if n.kind == "pyramidal" {
-      line((0, 0.15), (0, a * 0.76), stroke: pen)
+      line((0, 0.15), (0, a * 0.69), stroke: pen)
       for side in (-1, 1) {
         for (i, level) in (if n.detail == "minimal" { (0.47,) } else { (0.28, 0.47) }).enumerate() {
           let tip = (side * w * (0.75 + i * 0.16), a * (level + 0.14))

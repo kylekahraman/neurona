@@ -34,8 +34,8 @@
       (ports: (axon: (0.23, 0)),))
     let edges = (
       projection("input.east", "e.soma-west", color: excitation, target-gap: 0.06),
-      projection("i.axon", "e.apical", effect: "inhibitory", color: inhibition,
-        target-gap: 0.22),
+      projection("i.axon", "e.oblique-tip-west", effect: "inhibitory", color: inhibition,
+        target-gap: 0.10),
     )
     let labels = (annotation((ex, -0.95), [E], color: excitation),
       annotation((ix + 0.65, 2.15), if dis { [I#sub[2]] } else { [I] }, color: inhibition))

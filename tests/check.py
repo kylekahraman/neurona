@@ -39,3 +39,5 @@ with tempfile.TemporaryDirectory(prefix="paradigm-check-") as directory:
         if result.returncode == 0 or message not in result.stderr:
             raise SystemExit(f"Unexpected result for {case}:\n{result.stderr}")
         print(f"PASS rejects {case}")
+
+subprocess.run(["python3", str(ROOT / "tests/visual_geometry.py")], check=True)

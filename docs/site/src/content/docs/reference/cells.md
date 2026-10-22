@@ -12,7 +12,7 @@ These constructors return records; render them inside `circuit(neurons: ...)`.
 neuron(id, at: (0, 0), kind: "pyramidal", label: none,
   label-offset: (0.4, 0.3), color: rgb("344c66"),
   apical: 3.4, basal: 1.1, spread: 0.9, scale: 1,
-  orientation: 0deg, detail: "branched", axon-origin: "bottom",
+  orientation: 0deg, detail: "minimal", axon-origin: "bottom",
   dendrites: (), axons: (), ports: (:))
 ```
 

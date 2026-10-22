@@ -48,4 +48,4 @@
 #let dis = motif-scene("disinhibition")
 #let inhibitory = dis.connections.filter(edge => edge.effect == "inhibitory")
 #assert(inhibitory.any(edge => edge.source == "i1.axon" and edge.target == "i.soma-west"))
-#assert(inhibitory.any(edge => edge.source == "i.axon" and edge.target == "e.apical"))
+#assert(inhibitory.any(edge => edge.source == "i.axon" and edge.target == "e.oblique-tip-west"))
