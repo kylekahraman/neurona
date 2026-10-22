@@ -14,11 +14,14 @@ class Page(HTMLParser):
     def __init__(self, path):
         super().__init__()
         self.ids = set()
+        self.tables = 0
         self.links = []
         self.feed(path.read_text())
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "table":
+            self.tables += 1
         if 'id' in attrs:
             self.ids.add(attrs['id'])
         for key in ('href', 'src'):
@@ -51,6 +54,8 @@ def main():
                 destination = pages.get(resolved) or Page(resolved)
                 if unquote(url.fragment) not in destination.ids:
                     errors.append(f'{path.relative_to(DIST)}: missing anchor {link}')
+    for guide in ('cells', 'connections'):
+        assert pages[DIST / 'guides' / guide / 'index.html'].tables > 0, f'MDX table not rendered in {guide}'
     manifest = json.loads((SITE / 'src/generated/examples.json').read_text())
     for slug, example in manifest.items():
         assert (DIST / 'files' / f'{slug}.typ').read_text() == example['source'], slug

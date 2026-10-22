@@ -5,6 +5,7 @@ export default defineConfig({
   site: 'https://kylekahraman.github.io',
   base: '/neurona',
   trailingSlash: 'always',
+  markdown: { gfm: true },
   integrations: [starlight({
     title: 'Neurona',
     description: 'Draw neurons, circuits, layers, and experiments in Typst.',
