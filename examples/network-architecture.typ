@@ -1,6 +1,6 @@
 #import "../lib.typ": diagram, model-layer, link, annotation
 #set page(width: auto, height: auto, margin: 5mm)
-#set text(font: "Libertinus Sans")
+#set text(font: ("Inter", "Libertinus Sans"))
 
 // An abstract learned architecture. Plane and dot counts are illustrative;
 // annotate actual dimensions when a particular model requires them.

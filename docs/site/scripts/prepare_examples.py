@@ -37,14 +37,15 @@ def main():
         stage = Path(temp) / 'neurona-starter'
         (stage / 'examples').mkdir(parents=True)
         shutil.copytree(ROOT / 'src', stage / 'src', ignore=shutil.ignore_patterns('.*'))
+        shutil.copytree(ROOT / 'assets/fonts', stage / 'fonts')
         for name in ('lib.typ', 'LICENSE', 'README.md'):
             shutil.copyfile(ROOT / name, stage / name)
         for slug, path, title, alt, guide in EXAMPLES:
             source = path.read_text()
             staged = stage / 'examples' / f'{slug}.typ'
             staged.write_text(source)
-            subprocess.run(['typst', 'compile', '--root', str(stage), str(staged), str(output / f'{slug}.svg')], check=True)
-            subprocess.run(['typst', 'compile', '--root', str(stage), str(staged), str(output / f'{slug}.pdf')], check=True)
+            subprocess.run(['typst', 'compile', '--root', str(stage), '--font-path', str(stage / 'fonts'), str(staged), str(output / f'{slug}.svg')], check=True)
+            subprocess.run(['typst', 'compile', '--root', str(stage), '--font-path', str(stage / 'fonts'), str(staged), str(output / f'{slug}.pdf')], check=True)
             (output / f'{slug}.typ').write_text(source)
             manifest[slug] = dict(title=title, alt=alt, source=source, guide=guide)
         notes = stage / 'docs'

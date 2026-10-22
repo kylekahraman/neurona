@@ -59,6 +59,18 @@ frames can distinguish latent dynamics from observations.
 
 <Example name="state-model" collapsed />
 
+## Typography
+
+The model examples use Inter for labels. The starter includes the font and
+its open license in `fonts/`. With the CLI, add `--font-path fonts`:
+
+```sh
+typst compile --root . --font-path fonts examples/feedback-model.typ feedback-model.pdf
+```
+
+The drawing functions inherit the document font; use `#set text(font: "Inter")`
+to apply it to your own labels. Mathematical notation retains its math font.
+
 ## Connections and composition
 
 `link` draws a directed signal-flow arrow. Use `dashed: true` to distinguish

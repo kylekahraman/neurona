@@ -1,5 +1,6 @@
 #import "../lib.typ": diagram, block, link, annotation
 #set page(width: auto, height: auto, margin: 5mm)
+#set text(font: ("Inter", "Libertinus Sans"))
 
 // A rate-model illustration with explicitly authored recurrent routing.
 #diagram(

@@ -35,7 +35,7 @@ MODEL_FAILURES = {
 
 
 def compile_file(source, output, case=None):
-    command = ["typst", "compile", "--root", str(ROOT)]
+    command = ["typst", "compile", "--root", str(ROOT), "--font-path", str(ROOT / "assets/fonts")]
     if case:
         command += ["--input", f"case={case}"]
     return subprocess.run(command + [str(source), str(output)], cwd=ROOT,

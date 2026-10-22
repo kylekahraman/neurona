@@ -1,6 +1,6 @@
 #import "../lib.typ": diagram, model-layer, link, annotation
 #set page(width: auto, height: auto, margin: 5mm)
-#set text(font: "Libertinus Sans")
+#set text(font: ("Inter", "Libertinus Sans"))
 
 // Three copies of the same architecture, unrolled downward in time.
 // Perspective planes depict layer activity; their density is schematic.
@@ -32,7 +32,7 @@
     annotation((0, 2), [Input], size: 11pt, color: forward),
     annotation((3.56, 2), [Layer 1], size: 11pt, color: forward),
     annotation((7.26, 2), [Layer 2], size: 11pt, color: forward),
-    ..range(3).map(t => annotation((-1.1, -t * 4.1), [$t = #t$], size: 9pt)),
+    ..range(3).map(t => annotation((-1.1, -t * 4.1), [t = #t], size: 9pt)),
     annotation((1.55, 0.48), [Feedforward], size: 8pt, color: forward),
     annotation((5.6, -2.75), [Feedback], size: 8pt, color: feedback),
   ),

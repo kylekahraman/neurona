@@ -63,7 +63,7 @@ def stage_submission(output):
 
 
 def compile_client(typst, packages, client, source, output):
-    result = subprocess.run([typst, 'compile', '--root', str(client), '--package-path', str(packages),
+    result = subprocess.run([typst, 'compile', '--root', str(client), '--font-path', str(ROOT / 'assets/fonts'), '--package-path', str(packages),
                              str(source), str(output)], text=True, capture_output=True)
     if result.returncode:
         raise SystemExit(f'{source.name}:\n{result.stderr}')
