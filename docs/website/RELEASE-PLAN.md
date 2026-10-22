@@ -1,5 +1,13 @@
 # Neurona: first public release
 
+## Current progress
+
+The public repository and Starlight documentation are live. The visual baseline
+fixes and isolated package checks are implemented; the remaining acceptance
+step and reproducible submission commands are in
+[release readiness](../release-readiness.md). The sections below preserve the
+original release sequence.
+
 ## Objective
 
 Publish a small, visually reliable Neurona package on Typst Universe with a
