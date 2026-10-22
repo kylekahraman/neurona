@@ -34,8 +34,7 @@
     annotation((7.26, 2), [Layer 2], size: 11pt, color: forward),
     ..range(3).map(t => annotation((-1.1, -t * 4.1), [$t = #t$], size: 9pt)),
     annotation((1.55, 0.48), [Feedforward], size: 8pt, color: forward),
-    annotation((5.6, -2.65), [Feedback], size: 8pt, color: feedback),
-    annotation((3.5, -10), [Hierarchical feedback · unrolled in time], size: 10pt, color: forward),
+    annotation((5.6, -2.75), [Feedback], size: 8pt, color: feedback),
   ),
 )
 #diagram(..scene, width: 145mm, font-size: 9pt, line-width: 0.8pt)
