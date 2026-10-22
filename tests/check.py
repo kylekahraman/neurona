@@ -19,6 +19,17 @@ FAILURES = {
     "wrong-junction-port": "Unknown compartment",
 }
 
+MODEL_FAILURES = {
+    "duplicate-model-id": "Diagram element IDs must be unique",
+    "mixed-duplicate-id": "Diagram element IDs must be unique",
+    "invalid-model-port": "Unknown compartment",
+    "shadowed-model-port": "Custom diagram ports must not shadow",
+    "dotted-model-port": "Custom diagram ports must not shadow",
+    "negative-node-size": "Diagram node dimensions must be positive",
+    "negative-group-size": "Group dimensions must be positive",
+    "conflicting-model-route": "Choose via or controls",
+}
+
 
 def compile_file(source, output, case=None):
     command = ["typst", "compile", "--root", str(ROOT)]
@@ -36,6 +47,12 @@ with tempfile.TemporaryDirectory(prefix="paradigm-check-") as directory:
         print(f"PASS {source.relative_to(ROOT)}")
     for case, message in FAILURES.items():
         result = compile_file(ROOT / "tests/circuits.typ", Path(directory) / "invalid.pdf", case)
+        if result.returncode == 0 or message not in result.stderr:
+            raise SystemExit(f"Unexpected result for {case}:\n{result.stderr}")
+        print(f"PASS rejects {case}")
+
+    for case, message in MODEL_FAILURES.items():
+        result = compile_file(ROOT / "tests/models.typ", Path(directory) / "invalid-model.pdf", case)
         if result.returncode == 0 or message not in result.stderr:
             raise SystemExit(f"Unexpected result for {case}:\n{result.stderr}")
         print(f"PASS rejects {case}")

@@ -43,9 +43,36 @@
   }
 }
 
+/// Render one abstract node; exported for geometry checks and CeTZ composition.
+#let draw-node(n, at: none, font-size: 8pt, line-width: 1pt) = {
+  import cetz.draw: group, translate, circle, rect, anchor, content
+  group(name: n.id, {
+    translate(if at == none { n.at } else { at })
+    let pen = (paint: n.color, thickness: line-width * 0.75)
+    if n.shape == "circle" {
+      circle((0, 0), radius: (n.width / 2, n.height / 2), fill: n.fill, stroke: pen)
+    } else {
+      rect((-n.width / 2, -n.height / 2), (n.width / 2, n.height / 2),
+        radius: n.radius, fill: n.fill, stroke: pen)
+    }
+    for (name, point) in (
+      center: (0, 0), north: (0, n.height / 2), south: (0, -n.height / 2),
+      east: (n.width / 2, 0), west: (-n.width / 2, 0),
+      north-east: (n.width / 2, n.height / 2), north-west: (-n.width / 2, n.height / 2),
+      south-east: (n.width / 2, -n.height / 2), south-west: (-n.width / 2, -n.height / 2),
+    ) {
+      // Diagonal ellipse anchors must lie on its boundary.
+      let factor = if n.shape == "circle" and name.contains("-") { calc.sqrt(0.5) } else { 1 }
+      anchor(name, (point.at(0) * factor, point.at(1) * factor))
+    }
+    for (name, point) in n.ports { anchor(name, point) }
+    content((0, 0), text(size: font-size, fill: n.color)[#n.label])
+  })
+}
+
 /// Distances use canvas units (default 1 cm). Layers are listed bottom-to-top.
 #let circuit(
-  neurons: (), regions: (), populations: (), junctions: (), connections: (), annotations: (),
+  neurons: (), regions: (), populations: (), junctions: (), nodes: (), groups: (), connections: (), annotations: (),
   unit: 1cm, width: none, font-size: 8pt, line-width: 1pt,
   legend: false, legend-columns: 1,
 ) = {
@@ -53,6 +80,8 @@
   assert(neurons.map(n => n.id).dedup().len() == neurons.len(), message: "Neuron IDs must be unique")
   let elements = neurons + populations
   assert(elements.map(n => n.id).dedup().len() == elements.len(), message: "Cell and population IDs must be unique")
+  elements += nodes
+  assert(elements.map(n => n.id).dedup().len() == elements.len(), message: "Diagram element IDs must be unique")
   elements += junctions
   assert(elements.map(n => n.id).dedup().len() == elements.len(), message: "Junction IDs must be unique across scene elements")
   for n in elements {
@@ -78,6 +107,17 @@
   for n in populations {
     assert(n.width > 0 and n.height > 0, message: "Population dimensions must be positive")
   }
+  for n in nodes {
+    assert(n.shape in ("block", "circle"), message: "Unknown diagram node shape")
+    assert(n.width > 0 and n.height > 0, message: "Diagram node dimensions must be positive")
+    assert(n.radius >= 0, message: "Corner radius must be nonnegative")
+    assert(n.ports.keys().all(k => k != "" and not k.contains(".") and not k in
+      ("north", "south", "east", "west", "center", "north-east", "north-west", "south-east", "south-west")),
+      message: "Custom diagram ports must not shadow standard ports or contain dots")
+  }
+  for g in groups {
+    assert(g.width > 0 and g.height > 0, message: "Group dimensions must be positive")
+  }
   for n in junctions { assert(n.radius > 0, message: "Junction radius must be positive") }
   let resolve(p) = if type(p) == dictionary and "region" in p { layers.resolve-site(p, regions) } else { p }
   let validate-endpoint(p) = {
@@ -88,13 +128,13 @@
       assert(matches.len() == 1, message: "Unknown neuron endpoint or population: " + p)
       let n = matches.first()
       let ports = if "kind" in n { cells.port-names(n) }
-        else if "radius" in n { ("center",) }
-        else { ("north", "south", "east", "west", "center", "north-east", "north-west", "south-east", "south-west") }
+        else if "radius" in n and not "shape" in n { ("center",) }
+        else { ("north", "south", "east", "west", "center", "north-east", "north-west", "south-east", "south-west") + n.at("ports", default: (:)).keys() }
       assert(parts.last() in ports, message: "Unknown compartment: " + p)
     }
   }
   for p in connections {
-    assert(p.effect in ("excitatory", "inhibitory", "unspecified"), message: "Unknown connection effect")
+    assert(p.effect in ("excitatory", "inhibitory", "unspecified", "directed"), message: "Unknown connection effect")
     assert(p.via.len() == 0 or p.controls.len() == 0, message: "Choose via or controls for a projection")
     assert(p.controls.len() <= 2, message: "Use at most two Bezier control points")
     assert(p.label-at >= 0 and p.label-at <= 1, message: "label-at must be between 0 and 1")
@@ -104,6 +144,16 @@
   }
   let drawing = cetz.canvas(length: unit, {
     import cetz.draw: bezier, content, line, rect, circle
+    // Background frames are explicit geometry; they never imply membership or edges.
+    for g in groups {
+      let (x, y) = resolve(g.at)
+      rect((x - g.width / 2, y - g.height / 2), (x + g.width / 2, y + g.height / 2),
+        radius: 0.12, fill: g.fill,
+        stroke: (paint: g.color, thickness: line-width * 0.5, dash: if g.dashed { "dashed" } else { "solid" }))
+      if g.label != none {
+        content((x, y + g.height / 2 - 0.24), text(size: font-size, fill: g.label-color)[#g.label], anchor: "north")
+      }
+    }
     for r in regions { layers.draw-region(r, font-size: font-size) }
     for n in neurons { cells.draw-neuron(n, at: resolve(n.at), line-width: line-width) }
     for n in populations {
@@ -113,6 +163,9 @@
         name: n.id, fill: n.fill, stroke: (paint: n.color, thickness: line-width * 0.75))
       content(pos, text(size: font-size, weight: "bold", fill: n.color)[#n.label])
     }
+    for n in nodes {
+      draw-node(n, at: resolve(n.at), font-size: font-size, line-width: line-width)
+    }
     for n in junctions {
       circle(resolve(n.at), radius: n.radius, name: n.id, fill: n.color, stroke: none)
     }
@@ -121,7 +174,7 @@
       let pen = (paint: p.color, thickness: line-width * 0.85 * p.weight,
         cap: "round", join: "round", dash: if p.dashed { "dashed" } else { "solid" })
       let mark = if p.effect == "inhibitory" { (end: "|", scale: 1.3, offset: p.target-gap) }
-        else if p.effect == "excitatory" { (end: ">", scale: 1.1, offset: p.target-gap) } else { none }
+        else if p.effect in ("excitatory", "directed") { (end: ">", scale: 1.1, offset: p.target-gap) } else { none }
       if p.controls.len() > 0 {
         bezier(resolve(p.source), resolve(p.target), ..p.controls.map(resolve),
           name: name, stroke: pen, mark: mark)

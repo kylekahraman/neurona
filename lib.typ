@@ -12,3 +12,6 @@
 #import "src/circuits.typ": circuit, population, projection, annotation, junction
 #import "src/presets.typ": interneuron
 #import "src/motifs.typ": motif, motif-scene
+
+#import "src/models.typ" as models
+#import "src/models.typ": diagram, block, node, group, link
