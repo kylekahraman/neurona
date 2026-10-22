@@ -1,0 +1,96 @@
+---
+title: Models and architectures
+description: Draw abstract models, mathematical relationships, and neural network architectures without requiring neurons.
+---
+import Example from '../../../components/Example.astro';
+
+Use `diagram` for a model made of functional blocks, state nodes, equations,
+and connections. No biological neurons are required. It uses the same canvas
+as `circuit`, so abstract components and biological cells can also be mixed.
+
+## Start with two components
+
+In a file beside `lib.typ`:
+
+```typst
+#import "lib.typ": diagram, block, link
+#set page(width: auto, height: auto, margin: 5mm)
+#diagram(
+  nodes: (
+    block("input", $x$, at: (0, 0)),
+    block("model", $y = f(x)$, at: (3.5, 0)),
+  ),
+  connections: (link("input.east", "model.west"),),
+  width: 85mm,
+)
+```
+
+`at` places a component's center. Coordinates increase right and up; dimensions
+use canvas units (`unit: 1cm` by default). Set a block's `width` and `height`
+to leave room for its content. `diagram(width: ...)` fits the complete figure,
+including its labels, to a physical output width.
+
+## Unroll a model across time
+
+Place the same components in successive columns. Feedforward arrows run
+within a column; feedback arrows enter the next column. In this example,
+Layer 2 feeds the next step's Layer 1, and Layer 1 feeds the next step's Input.
+The drawing specifies these connections without imposing update equations.
+
+<Example name="feedback-model" />
+
+The groups are background frames with explicit positions and dimensions.
+They do not move their contents or create connections. To add a step, change
+both `range(3)` expressions to `range(4)`, change `range(2)` to `range(3)`,
+and extend the time axis and annotation positions to fit the fourth column.
+
+## Include equations and recurrence
+
+A block body can contain ordinary Typst content, including native math.
+For recurrence, connect two ports on the same block and provide Bezier
+`controls` outside it. This avoids drawing a zero-length connection.
+
+<Example name="rate-model" />
+
+## Draw hidden and observed states
+
+`node` supplies circular states with the same named directional ports as
+blocks. Color and grouping can distinguish latent states and observations.
+Use your caption to define what the arrows mean in your model.
+
+<Example name="state-model" />
+
+## Compose a neural network architecture
+
+Use Typst loops to generate repeated units and explicit connections. Here,
+three inputs connect to every hidden unit, and the hidden layer feeds a
+readout block. Custom input ports separate incoming arrowheads.
+
+<Example name="network-architecture" />
+
+## Route and label connections
+
+`link` draws a neutral directed arrow: it makes no excitatory or inhibitory
+claim. Use `directed: false` for an unmarked line. It accepts the same `via`,
+`controls`, `dashed`, `label`, `label-at`, `label-offset`, `weight`, and
+`target-gap` options as `projection`. Labels can contain math such as `[$W$]`.
+
+A node or block exposes `north`, `south`, `east`, `west`, `center`, and four
+corner ports. Define custom ports with `ports: (input: (-1, 0.2))` and connect
+to `"component.input"`. Custom coordinates are offsets from the component's
+center. Choose offsets on the visible boundary; the renderer does not snap
+them to the outline.
+
+Groups may be nested visually: list the outer frame first and place inner
+frames afterward. Positions remain in the common canvas coordinates.
+
+For a mixed figure, pass `neurons`, `regions`, or `populations` to `diagram`
+alongside `nodes`. All connectable elements need unique IDs. Use `projection`
+when a biological connection needs an excitatory arrow or inhibitory bar.
+
+These functions draw architectures and relationships. They do not execute
+models, infer connectivity, or automatically route around objects. Stacked
+convolutional feature-map glyphs are not built in yet.
+
+See the [Models API](/neurona/reference/models/) for defaults and ports, and
+[Styling and export](/neurona/guides/styling-and-export/) for PDF, SVG, and PNG.

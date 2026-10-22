@@ -23,13 +23,13 @@ export default defineConfig({
         { slug: 'getting-started/first-figure' },
       ] },
       { label: 'Guides', items: [
-        { slug: 'guides/cells' }, { slug: 'guides/connections' },
+        { slug: 'guides/models' }, { slug: 'guides/cells' }, { slug: 'guides/connections' },
         { slug: 'guides/layers' }, { slug: 'guides/timelines' },
         { slug: 'guides/recipes' }, { slug: 'guides/styling-and-export' },
       ] },
       { label: 'Gallery', slug: 'gallery' },
       { label: 'API reference', items: [
-        { slug: 'reference/cells' }, { slug: 'reference/circuits' },
+        { slug: 'reference/models' }, { slug: 'reference/cells' }, { slug: 'reference/circuits' },
         { slug: 'reference/layers' }, { slug: 'reference/experiments' },
       ] },
       { label: 'Development', slug: 'development' },

@@ -6,7 +6,7 @@ description: Compose scenes, projections, population boxes, labels, and branch p
 ## circuit
 
 ```typst
-circuit(neurons: (), regions: (), populations: (), junctions: (),
+circuit(neurons: (), regions: (), populations: (), junctions: (), nodes: (), groups: (),
   connections: (), annotations: (), unit: 1cm, width: none,
   font-size: 8pt, line-width: 1pt, legend: false, legend-columns: 1)
 ```
@@ -16,7 +16,7 @@ Each collection is a tuple of constructor records. Canvas coordinates use
 artwork, including text, to an exact physical width. `legend` displays the
 region bands using their labels and fills.
 
-IDs must be unique across neurons, populations, and junctions. Region IDs
+IDs must be unique across neurons, populations, abstract nodes, and junctions. Region IDs
 are unique across regions, and band IDs are unique within each region.
 
 ## projection
@@ -30,7 +30,7 @@ projection(source, target, effect: "excitatory", color: rgb("426f91"),
 | Parameter | Meaning |
 | --- | --- |
 | `source`, `target` | Coordinate tuple, `site`, or `"id.port"` |
-| `effect` | `excitatory` arrow, `inhibitory` bar, or `unspecified` unmarked line |
+| `effect` | `excitatory` arrow, `inhibitory` bar, `directed` neutral arrow, or `unspecified` unmarked line |
 | `via` | Polyline waypoints |
 | `controls` | One or two Bezier handles; mutually exclusive with `via` |
 | `dashed` | Dashed stroke when true |
@@ -41,7 +41,7 @@ projection(source, target, effect: "excitatory", color: rgb("426f91"),
 | `target-gap` | Nonnegative terminal clearance in canvas units |
 
 Waypoints and controls accept the same position forms as endpoints. Target
-gaps apply to marked excitatory and inhibitory connections. Unmarked paths
+gaps apply to marked excitatory, inhibitory, and directed connections. Unmarked paths
 retain their complete length. Routes do not automatically avoid other objects.
 
 ## population
@@ -87,3 +87,6 @@ scene. `motif-scene` returns editable `neurons`, `populations`, `connections`,
 and `annotations` arguments for composition with `circuit`.
 
 See [Connections](/neurona/guides/connections/) for practical routing examples.
+
+For abstract blocks, state nodes, background groups, and neutral signal-flow
+arrows, see the [Models API](/neurona/reference/models/).

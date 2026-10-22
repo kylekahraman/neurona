@@ -11,13 +11,16 @@
 - Compiled the examples and semantic tests, including rejection cases, on
   Typst 0.13.1 and 0.15.0. The manifest records 0.13.1 as the minimum.
 - Prepared a minimal submission tree with the manifest, license, README,
-  entry point, and seven source modules. Documentation links in the staged
+  entry point, and eight source modules. Documentation links in the staged
   README point to a fixed source revision; website dependencies and gallery
   assets are not included in the runtime bundle.
-- Compiled 28 standalone client documents from outside the source tree with
+- Compiled 33 standalone client documents from outside the source tree with
   the staged `@preview/neurona:0.1.0` import, plus SVG and PNG exports.
   These cover the repository examples, all six introductory examples, and
   each Typst code block in the submission README.
+- Added abstract diagrams with equation blocks, state nodes, custom ports, groups,
+  and neutral links. The user-reference model has an exact graph regression;
+  actual rendered node anchors, mixed scenes, and invalid inputs are tested.
 - Added CI for both compiler versions, the official Universe package checker,
   and the documentation build/link checks.
 

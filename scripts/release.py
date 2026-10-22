@@ -35,7 +35,7 @@ def submission_readme(revision):
     source = package_source(source).replace('In a file beside `lib.typ`:', 'In a new Typst document:')
     start = source.index('`neurona` is the new development name')
     end = source.index('\n\n', start)
-    source = source[:start] + ('Neurona provides schematic cells, circuits, layers, and experimental sequences. '
+    source = source[:start] + ('Neurona provides schematic cells, circuits, abstract models, layers, and experimental sequences. '
         'The original `paradigm()`, `stage()`, and `timeline()` functions remain available. '
         'Examples below use the versioned package import for this submission.') + source[end:]
     source = source.replace('These APIs are a development preview, not a claim that a new release is available on Typst Universe.',

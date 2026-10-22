@@ -1,6 +1,6 @@
 # neurona
 
-A modular Typst toolkit for neuroscience schematics: experimental paradigms, stimulus sequences, schematic neurons, laminar organization, and compartment-specific circuit connections. The output is vector artwork, with native Typst labels. The original timeline API remains available.
+A modular Typst toolkit for neuroscience schematics: experimental paradigms, stimulus sequences, schematic neurons, laminar organization, compartment-specific circuit connections, and abstract model architectures. The output is vector artwork, with native Typst labels. The original timeline API remains available.
 
 [Documentation and visual gallery](https://kylekahraman.github.io/neurona/) · [Source](https://github.com/kylekahraman/neurona)
 
@@ -20,6 +20,29 @@ In a file beside `lib.typ`:
 ```
 
 For a small six-layer example, start with [quickstart.typ](examples/quickstart.typ). Simple figures use only a few constructors; complex circuits currently require explicit positions and routes. Initial interneuron and circuit-motif recipes are available; routing assistance is on the roadmap.
+
+## Models without neurons
+
+```typst
+#import "lib.typ": diagram, block, link
+#diagram(
+  nodes: (block("input", $x$), block("model", $y = f(x)$, at: (3.5, 0))),
+  connections: (link("input.east", "model.west"),),
+  width: 85mm,
+)
+```
+
+`diagram` uses the same renderer as `circuit`. Add `node` for circular states,
+`group` for background frames, and mathematical content in block bodies or
+connection labels. `link` represents directed signal flow without a biological
+sign. Neurons are optional and can be mixed with abstract nodes. Positions,
+component sizes, and connection routes are explicit.
+
+See [feedback across time](examples/feedback-model.typ),
+[a mathematical rate model](examples/rate-model.typ),
+[hidden/observed states](examples/state-model.typ), and
+[a neural network architecture](examples/network-architecture.typ), or the
+[model guide](https://kylekahraman.github.io/neurona/guides/models/).
 
 ## Cell recipes and circuit motifs
 

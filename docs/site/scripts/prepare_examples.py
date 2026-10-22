@@ -10,6 +10,10 @@ SITE = Path(__file__).resolve().parents[1]
 ROOT = SITE.parents[1]
 TUTORIAL = ROOT / 'docs/website/tutorial'
 EXAMPLES = [
+    ('feedback-model', ROOT / 'examples/feedback-model.typ', 'Feedback across time', 'Three time steps with within-step feedforward and next-step feedback connections.', 'guides/models/'),
+    ('rate-model', ROOT / 'examples/rate-model.typ', 'Mathematical rate model', 'An equation block with input, readout, and a curved recurrent-state connection.', 'guides/models/'),
+    ('state-model', ROOT / 'examples/state-model.typ', 'Hidden and observed states', 'Three latent states connected across time and to their observations.', 'guides/models/'),
+    ('network-architecture', ROOT / 'examples/network-architecture.typ', 'Neural network architecture', 'Three input units, three fully connected hidden units, and a readout block.', 'guides/models/'),
     ('01-cell', TUTORIAL / '01-cell.typ', 'Your first cell', 'A labeled pyramidal cell.', 'getting-started/first-figure/'),
     ('02-connections', TUTORIAL / '02-connections.typ', 'Two connected cells', 'Excitatory and inhibitory projections between two cells.', 'guides/connections/'),
     ('03-layers', TUTORIAL / '03-layers.typ', 'Cortical layers', 'A pyramidal cell in a six-layer cortical stack.', 'guides/layers/'),

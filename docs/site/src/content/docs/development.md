@@ -12,6 +12,9 @@ Typst Universe package import is not available yet.
 The implemented drawing vocabulary includes schematic cells, explicit neurite
 paths, layers, compartment connections, population boxes, junctions,
 experimental timelines, four interneuron recipes, and three circuit motifs.
+Abstract model diagrams add equation blocks, circular states, groups, and neutral
+signal-flow links, with optional biological components. See
+[Models and architectures](/neurona/guides/models/).
 
 The source is public at [kylekahraman/neurona](https://github.com/kylekahraman/neurona).
 
