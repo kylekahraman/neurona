@@ -12,20 +12,16 @@ permissions:
 jobs:
   package:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        typst: ['0.13.1', '0.15.0']
     steps:
       - uses: actions/checkout@v4
       - uses: typst-community/setup-typst@v4
         with:
-          typst-version: ${{ matrix.typst }}
+          typst-version: latest
       - name: Check geometry and examples
         run: python3 tests/check.py
       - name: Check isolated release package
         run: python3 scripts/release.py --check
       - name: Run official Universe package checker
-        if: matrix.typst == '0.15.0'
         run: |
           docker run --rm \
             -e XDG_CACHE_HOME=/cache \
@@ -33,7 +29,6 @@ jobs:
             -v "$PWD/build/submission/preview/neurona/0.1.0:/data:ro" \
             ghcr.io/typst/package-check:0.7.0 check
       - uses: actions/upload-artifact@v4
-        if: matrix.typst == '0.15.0'
         with:
           name: neurona-release-candidate
           path: |
@@ -47,7 +42,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: typst-community/setup-typst@v4
         with:
-          typst-version: '0.15.0'
+          typst-version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 24

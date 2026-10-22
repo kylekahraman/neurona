@@ -21,7 +21,7 @@
 - Added abstract diagrams with equation blocks, state nodes, custom ports, groups,
   and neutral links. The user-reference model has an exact graph regression;
   actual rendered node anchors, mixed scenes, and invalid inputs are tested.
-- Added CI for both compiler versions, the official Universe package checker,
+- CI uses the latest stable Typst release, the official Universe package checker,
   and the documentation build/link checks.
 
 ## Your usability check
