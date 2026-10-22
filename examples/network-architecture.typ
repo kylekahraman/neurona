@@ -1,29 +1,34 @@
-#import "../lib.typ": diagram, node, block, group, link, annotation
+#import "../lib.typ": diagram, model-layer, link, annotation
 #set page(width: auto, height: auto, margin: 5mm)
+#set text(font: "Libertinus Sans")
 
-// Small fully connected architecture. Each edge is explicitly generated;
-// the renderer never infers connectivity from layout or grouping.
+// An abstract learned architecture. Plane and dot counts are illustrative;
+// annotate actual dimensions when a particular model requires them.
 #diagram(
   nodes: (
-    ..range(3).map(i => node("x" + str(i), $x_(#(i + 1))$, at: (0, 2 - i), radius: 0.24, fill: rgb("fff0cd"))),
-    ..range(3).map(i => node("h" + str(i), $h_(#(i + 1))$, at: (3, 2 - i), radius: 0.24,
-      ports: (in0: (-calc.sqrt(0.24 * 0.24 - 0.12 * 0.12), 0.12), in1: (-0.24, 0),
-        in2: (-calc.sqrt(0.24 * 0.24 - 0.12 * 0.12), -0.12)))),
-    block("y", $y = C h$, at: (6.5, 1), width: 1.8, ports: (in0: (-0.9, 0.25), in1: (-0.9, 0), in2: (-0.9, -0.25))),
-  ),
-  groups: (
-    group(label: [Input], at: (0, 1), width: 1.6, height: 3.8),
-    group(label: [Hidden layer], at: (3, 1), width: 2, height: 3.8),
+    model-layer("input", at: (0, 0), planes: 1, height: 2,
+      fill: rgb("edf0ef"), color: rgb("657b7a")),
+    model-layer("hidden", at: (3.4, 0), planes: 5, height: 2.4, width: 1.1,
+      fill: rgb("e3f1ed"), color: rgb("3b8c7b")),
+    model-layer("state", at: (6.8, 0), planes: 3, height: 1.6,
+      fill: rgb("e5edf7"), color: rgb("4c7dab")),
+    model-layer("readout", at: (10.2, 0), planes: 1, height: 0.35, width: 1.3, grid: none,
+      fill: rgb("e9e5df"), color: rgb("91785f")),
   ),
   connections: (
-    ..range(3).map(i => range(3).map(j =>
-      link("x" + str(i) + ".east", "h" + str(j) + ".in" + str(i), color: rgb("91a6b7"), weight: 0.55)
-    )).flatten(),
-    ..range(3).map(i => link("h" + str(i) + ".east", "y.in" + str(i), color: rgb("426f91"))),
+    link("input.east", "hidden.west"),
+    link("hidden.east", "state.west"),
+    link("state.east", "readout.west"),
   ),
   annotations: (
-    annotation((1.5, -1.5), $h = phi(W x + b)$),
-    annotation((6.5, -1.5), [Readout]),
+    annotation((0, 2), [Input]),
+    annotation((3.12, 2), [Hidden layer]),
+    annotation((6.66, 2), [Representation]),
+    annotation((10.2, 2), [Readout]),
+    annotation((0, -1.8), $x$),
+    annotation((3.3, -1.8), $h = phi(W x + b)$),
+    annotation((6.8, -1.8), $z = f(h)$),
+    annotation((10.2, -1.8), $y = C z$),
   ),
-  width: 150mm, font-size: 9pt,
+  width: 170mm, font-size: 9pt, line-width: 0.8pt,
 )

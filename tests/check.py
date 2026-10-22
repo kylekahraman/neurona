@@ -20,6 +20,9 @@ FAILURES = {
 }
 
 MODEL_FAILURES = {
+    "invalid-plane-count": "Layer planes must be a positive integer",
+    "invalid-layer-grid": "Layer grid needs two positive integers",
+    "invalid-layer-offset": "Layer offsets must be nonnegative",
     "duplicate-model-id": "Diagram element IDs must be unique",
     "mixed-duplicate-id": "Diagram element IDs must be unique",
     "invalid-model-port": "Unknown compartment",

@@ -15,6 +15,16 @@
   radius: 0, shape: "circle", fill: fill, color: color, ports: ports,
 )
 
+/// A schematic array of activity, drawn as perspective planes.
+/// Grid density and plane count describe the glyph, not inferred model dimensions.
+#let model-layer(id, body: none, at: (0, 0), width: 0.9, height: 1.8,
+  planes: 3, offset: (0.14, 0.1), slant: 0.25, grid: (4, 6),
+  fill: rgb("e6f0f2"), color: rgb("397986"), ports: (:)) = (
+  id: id, label: body, at: at, width: width, height: height, radius: 0,
+  shape: "layer", planes: planes, offset: offset, slant: slant, grid: grid,
+  fill: fill, color: color, ports: ports,
+)
+
 /// A background frame. Position/extent are explicit; labels sit inside its top edge.
 /// Groups do not transform their contents. Draw outer frames before inner frames.
 #let group(label: none, at: (0, 0), width: 3, height: 3,

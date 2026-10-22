@@ -14,4 +14,4 @@
 #import "src/motifs.typ": motif, motif-scene
 
 #import "src/models.typ" as models
-#import "src/models.typ": diagram, block, node, group, link
+#import "src/models.typ": diagram, block, node, model-layer, group, link

@@ -43,30 +43,62 @@
   }
 }
 
+/// Port coordinates match the visible front and rear edges of perspective layers.
+#let node-anchors(n) = {
+  let (w, h) = (n.width / 2, n.height / 2)
+  if n.shape == "layer" {
+    let (dx, dy) = (n.offset.at(0) * (n.planes - 1), n.offset.at(1) * (n.planes - 1))
+    (center: (0, 0), east: (w, n.slant / 2), west: (-w - dx, -n.slant / 2 + dy),
+      north: (-dx, h + dy), south: (0, -h),
+      north-east: (w - dx, h + n.slant / 2 + dy), north-west: (-w - dx, h - n.slant / 2 + dy),
+      south-east: (w, -h + n.slant / 2), south-west: (-w, -h - n.slant / 2))
+  } else {
+    let k = if n.shape == "circle" { calc.sqrt(0.5) } else { 1 }
+    (center: (0, 0), north: (0, h), south: (0, -h), east: (w, 0), west: (-w, 0),
+      north-east: (w * k, h * k), north-west: (-w * k, h * k),
+      south-east: (w * k, -h * k), south-west: (-w * k, -h * k))
+  }
+}
+
 /// Render one abstract node; exported for geometry checks and CeTZ composition.
 #let draw-node(n, at: none, font-size: 8pt, line-width: 1pt) = {
-  import cetz.draw: group, translate, circle, rect, anchor, content
+  import cetz.draw: group, translate, circle, rect, anchor, content, line
   group(name: n.id, {
     translate(if at == none { n.at } else { at })
     let pen = (paint: n.color, thickness: line-width * 0.75)
     if n.shape == "circle" {
       circle((0, 0), radius: (n.width / 2, n.height / 2), fill: n.fill, stroke: pen)
+    } else if n.shape == "layer" {
+      // Rear planes first; the opaque front plane hides the rear interiors.
+      for index in range(n.planes).rev() {
+        let (dx, dy) = (-index * n.offset.at(0), index * n.offset.at(1))
+        let (w, h, t) = (n.width / 2, n.height / 2, n.slant / 2)
+        line((dx - w, dy - h - t), (dx + w, dy - h + t),
+          (dx + w, dy + h + t), (dx - w, dy + h - t), close: true,
+          fill: if index == 0 { n.fill } else { n.fill.darken(8% * index / n.planes) },
+          stroke: (paint: n.color.lighten(25%), thickness: line-width * 0.5))
+      }
+      if n.grid != none {
+        let (columns, rows) = n.grid
+        let radius = calc.min(n.width / (columns + 1), n.height / (rows + 1)) * 0.2
+        for column in range(columns) {
+          let x = -n.width / 2 + n.width * (column + 1) / (columns + 1)
+          for row in range(rows) {
+            let y = -n.height / 2 + n.height * (row + 1) / (rows + 1) + n.slant * x / n.width
+            circle((x, y), radius: (radius, radius * 1.25), fill: n.color.lighten(28%), stroke: none)
+          }
+        }
+      }
     } else {
       rect((-n.width / 2, -n.height / 2), (n.width / 2, n.height / 2),
         radius: n.radius, fill: n.fill, stroke: pen)
     }
-    for (name, point) in (
-      center: (0, 0), north: (0, n.height / 2), south: (0, -n.height / 2),
-      east: (n.width / 2, 0), west: (-n.width / 2, 0),
-      north-east: (n.width / 2, n.height / 2), north-west: (-n.width / 2, n.height / 2),
-      south-east: (n.width / 2, -n.height / 2), south-west: (-n.width / 2, -n.height / 2),
-    ) {
-      // Diagonal ellipse anchors must lie on its boundary.
-      let factor = if n.shape == "circle" and name.contains("-") { calc.sqrt(0.5) } else { 1 }
-      anchor(name, (point.at(0) * factor, point.at(1) * factor))
-    }
+    for (name, point) in node-anchors(n) { anchor(name, point) }
     for (name, point) in n.ports { anchor(name, point) }
-    content((0, 0), text(size: font-size, fill: n.color)[#n.label])
+    if n.label != none {
+      content(if n.shape == "layer" { (0, -n.height / 2 - n.slant / 2 - 0.4) } else { (0, 0) },
+        text(size: font-size, fill: n.color)[#n.label])
+    }
   })
 }
 
@@ -108,9 +140,18 @@
     assert(n.width > 0 and n.height > 0, message: "Population dimensions must be positive")
   }
   for n in nodes {
-    assert(n.shape in ("block", "circle"), message: "Unknown diagram node shape")
+    assert(n.shape in ("block", "circle", "layer"), message: "Unknown diagram node shape")
     assert(n.width > 0 and n.height > 0, message: "Diagram node dimensions must be positive")
     assert(n.radius >= 0, message: "Corner radius must be nonnegative")
+    if n.shape == "layer" {
+      assert(type(n.planes) == int and n.planes > 0, message: "Layer planes must be a positive integer")
+      assert(n.offset.len() == 2 and n.offset.all(v => v >= 0), message: "Layer offsets must be nonnegative")
+      assert(n.slant >= 0, message: "Layer slant must be nonnegative")
+      if n.grid != none {
+        assert(n.grid.len() == 2 and n.grid.all(v => type(v) == int and v > 0),
+          message: "Layer grid needs two positive integers")
+      }
+    }
     assert(n.ports.keys().all(k => k != "" and not k.contains(".") and not k in
       ("north", "south", "east", "west", "center", "north-east", "north-west", "south-east", "south-west")),
       message: "Custom diagram ports must not shadow standard ports or contain dots")
