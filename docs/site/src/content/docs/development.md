@@ -13,13 +13,14 @@ The implemented drawing vocabulary includes schematic cells, explicit neurite
 paths, layers, compartment connections, population boxes, junctions,
 experimental timelines, four interneuron recipes, and three circuit motifs.
 
+The source is public at [kylekahraman/neurona](https://github.com/kylekahraman/neurona).
+
 ## Before the first release
 
 1. **Refine the drawing defaults.** Remove the pyramidal tuft protrusion,
    simplify the default branches, and improve route and terminal clearances
    in the two-cell and motif examples.
-2. **Prepare the package.** Establish the canonical public repository,
-   review metadata and supported Typst versions, and check a clean package
+2. **Prepare the package.** Review metadata and supported Typst versions, and check a clean package
    installation against the documented examples.
 3. **Complete release verification.** Review rendered figures at their
    intended sizes, run package checks, and verify documentation links,

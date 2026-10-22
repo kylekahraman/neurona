@@ -26,6 +26,15 @@ Keep `lib.typ` beside `src/`. The supplied examples import `../lib.typ` because
 they live in `examples/`. This local import is the current installation method;
 there is no published `@preview/neurona` release yet.
 
+You can also clone the [public repository](https://github.com/kylekahraman/neurona)
+to work with the complete development tree:
+
+```sh
+git clone https://github.com/kylekahraman/neurona.git
+cd neurona
+typst compile --root . examples/quickstart.typ figure.pdf
+```
+
 ## In your browser
 
 1. Create a blank project in the [Typst web app](https://typst.app/).

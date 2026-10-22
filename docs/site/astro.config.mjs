@@ -9,6 +9,7 @@ export default defineConfig({
     title: 'Neurona',
     description: 'Draw neurons, circuits, layers, and experiments in Typst.',
     favicon: '/favicon.svg',
+    editLink: { baseUrl: 'https://github.com/kylekahraman/neurona/edit/main/docs/site/' },
     customCss: ['./src/styles/custom.css'],
     social: [
       { icon: 'github', label: 'Source on GitHub', href: 'https://github.com/kylekahraman/neurona' },
