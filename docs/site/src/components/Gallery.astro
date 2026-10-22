@@ -1,0 +1,10 @@
+---
+import examples from '../generated/examples.json';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<div class="gallery-grid not-content">
+  {Object.entries(examples).map(([name, example]) => <a class="gallery-card" href={`${base}/gallery/#${name}`}>
+    <div class="figure-panel"><img src={`${base}/files/${name}.svg`} alt={example.alt} loading="lazy" /></div>
+    <h2>{example.title}</h2><p>View source and downloads →</p>
+  </a>)}
+</div>

@@ -1,0 +1,36 @@
+import { defineConfig } from 'astro/config';
+import starlight from '@astrojs/starlight';
+
+export default defineConfig({
+  site: 'https://kylekahraman.github.io',
+  base: '/neurona',
+  trailingSlash: 'always',
+  integrations: [starlight({
+    title: 'Neurona',
+    description: 'Draw neurons, circuits, layers, and experiments in Typst.',
+    favicon: '/favicon.svg',
+    customCss: ['./src/styles/custom.css'],
+    social: [
+      { icon: 'github', label: 'Source on GitHub', href: 'https://github.com/kylekahraman/neurona' },
+      { icon: 'external', label: 'Kyle Kahraman', href: 'https://kylekahraman.github.io/projects/' },
+    ],
+    sidebar: [
+      { label: 'Overview', slug: 'index' },
+      { label: 'Get started', items: [
+        { slug: 'getting-started/installation' },
+        { slug: 'getting-started/first-figure' },
+      ] },
+      { label: 'Guides', items: [
+        { slug: 'guides/cells' }, { slug: 'guides/connections' },
+        { slug: 'guides/layers' }, { slug: 'guides/timelines' },
+        { slug: 'guides/recipes' }, { slug: 'guides/styling-and-export' },
+      ] },
+      { label: 'Gallery', slug: 'gallery' },
+      { label: 'API reference', items: [
+        { slug: 'reference/cells' }, { slug: 'reference/circuits' },
+        { slug: 'reference/layers' }, { slug: 'reference/experiments' },
+      ] },
+      { label: 'Development', slug: 'development' },
+    ],
+  })],
+});

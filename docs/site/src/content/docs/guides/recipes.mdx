@@ -1,0 +1,42 @@
+---
+title: Cell recipes and circuit motifs
+description: Reuse editable interneuron drawings and common circuit arrangements.
+---
+import Example from '../../../components/Example.astro';
+
+## Circuit motifs
+
+Use `motif` for a compact starting diagram. The available arrangements are
+`"feedforward"`, `"feedback"`, and `"disinhibition"`.
+
+<Example name="05-motif" />
+
+For an editable scene, import `motif-scene` and `circuit` instead:
+
+```typst
+#circuit(..motif-scene("feedforward"), width: 85mm)
+```
+
+`motif-scene` returns ordinary circuit arguments: neurons, populations,
+connections, and annotations. Edit those records to change positions,
+labels, or connections before passing them to `circuit`.
+
+## Interneuron domain recipes
+
+`interneuron` provides `"basket"`, `"axo-axonic"`, `"bistratified"`, and
+`"olm"` recipes. Each includes separately drawn dendritic and axonal paths.
+
+<Example name="interneuron-atlas" code={false} />
+
+Use `arbor: false` to omit the extended axon territory while retaining the
+axon source port for explicit projections. The recipe still draws its
+somatodendritic paths. `color` sets the soma/axon color; `dendrite-color`
+sets the dendritic color.
+
+These four recipes depict schematic rodent CA1 domains. Their sources,
+geometry, and customization notes are in `docs/cell-recipes.md` inside the
+[starter download](/neurona/files/neurona-starter.zip). Their arbors do not
+adapt automatically to different layer heights.
+
+See [Cells API](/neurona/reference/cells/) for recipe parameters and
+[Development](/neurona/development/) for current visual refinement work.

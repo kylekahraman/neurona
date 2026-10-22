@@ -1,0 +1,39 @@
+---
+title: Your first figure
+description: Draw and customize a cell with a few lines of Typst.
+---
+import Example from '../../../components/Example.astro';
+
+Start with the [starter download](/neurona/getting-started/installation/).
+Open `examples/01-cell.typ`, or copy this complete file into
+`examples/figure.typ`.
+
+<Example name="01-cell" />
+
+## Read the drawing
+
+- `circuit` creates the canvas and composes its contents.
+- `neuron("pc")` adds a pyramidal cell. The ID `pc` lets connections refer to it.
+- `label: [Pyramidal cell]` supplies normal Typst content.
+- `width: 60mm` scales the complete artwork to a physical width.
+- `#set page(...)` crops the document around the figure with a small margin.
+
+The trailing comma in `(neuron("pc"),)` makes a one-item list in Typst.
+
+## Make a change
+
+Replace the label with `[My cell]`. Then add `color: rgb("367c9e")` to the
+`neuron` call. Compile again:
+
+```sh
+typst compile --root . examples/figure.typ figure.pdf
+```
+
+Try `detail: "minimal"` for fewer branch details, or `kind: "granule"` for a
+different glyph. [The cells guide](/neurona/guides/cells/) explains those choices.
+
+## Add the next piece
+
+[Connect a second cell](/neurona/guides/connections/),
+[place the cell in layers](/neurona/guides/layers/), or
+[export for your paper](/neurona/guides/styling-and-export/).

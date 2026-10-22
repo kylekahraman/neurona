@@ -1,0 +1,39 @@
+---
+title: Experiments and timelines
+description: Draw stimulus panels, numeric time axes, and parallel event lanes.
+---
+import Example from '../../../components/Example.astro';
+
+## Stimulus panels
+
+`stage` describes an event. `paradigm` displays the stages as a sequence of
+panels, with any Typst content as their stimuli.
+
+<Example name="04-timeline" />
+
+The default panel spacing is equal. Here, duration strings are printed labels;
+`"100 ms"` does not make a panel narrower than `"2 s"`.
+
+For proportional widths, supply numeric `duration` values in seconds and set
+`spacing: "proportional"`. `duration-label` can override the printed text.
+Very brief stages can become too narrow for a label; use a time axis when
+durations differ greatly.
+
+## A numeric time axis
+
+Use `timeline(..., layout: "axis")` for events and analysis windows on one
+axis. Supply numeric `start` and `end` values in seconds. Intervals can overlap.
+
+<Example name="axis" />
+
+## Parallel tracks
+
+Use `layout: "lanes"` and give stages a `lane` name. Each stage needs an
+explicit `start`, plus an `end` or numeric duration. This separates task,
+stimulus, recording, and analysis tracks.
+
+<Example name="lanes" />
+
+Change panel shapes with `panel: "rectangle"`, `"perspective"`, `"diamond"`,
+`"circle"`, or `"none"`. An individual stage can override the shape.
+See [Experiments API](/neurona/reference/experiments/) for sizing and styling.

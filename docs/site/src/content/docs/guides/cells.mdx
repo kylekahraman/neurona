@@ -1,0 +1,51 @@
+---
+title: Cells and custom branches
+description: Choose cell glyphs, adjust geometry, and author neurite paths.
+---
+import Example from '../../../components/Example.astro';
+
+## Choose a glyph
+
+`neuron` supports `"pyramidal"` (the default), `"granule"`, `"stellate"`,
+`"horizontal"`, `"basket"`, `"bipolar"`, and `"custom"`.
+Place neuron records in the `neurons` tuple of a `circuit`.
+
+| Control | What it changes |
+| --- | --- |
+| `at: (2, 0)` | Soma position; x runs right and y runs up |
+| `apical: 2.2` | Upper arbor extent |
+| `basal: 0.75` | Lower arbor extent |
+| `spread: 0.52` | Arbor width |
+| `scale: 0.8` | Uniform cell size, including its ports |
+| `orientation: 30deg` | Rotation around the soma; the label stays upright |
+| `detail: "minimal"` | Fewer branch details |
+| `label-offset: (0.5, 0.3)` | Label position relative to the soma in the canvas axes |
+
+`apical`, `basal`, and `spread` describe geometry. Their visible effect depends
+on the chosen glyph. The built-in branch patterns currently have fixed counts;
+use custom paths when you need a different branching pattern.
+
+## Draw your own cell
+
+With `kind: "custom"`, Neurona draws the soma and your explicit paths.
+Each `neurite` uses cell-relative coordinates. Separate dendrites and axons so
+they can carry different colors and expose their own endpoint ports.
+
+<Example name="06-custom" />
+
+For a built-in glyph, `dendrites` and `axons` add paths to its existing geometry.
+For a custom glyph, they supply the branches themselves.
+
+## Curves and boutons
+
+A path with three or more points is a polyline. For a smooth curve, use exactly
+two endpoints and one or two `controls` points. `boutons` draws markers at the
+explicit positions you supply; those positions should lie on the path if you
+want the markers attached to it.
+
+Each path exposes its last point as a port: `dendrite-0`, `dendrite-1`,
+`axon-0`, and so on. Add further named ports with `ports: (tip: (0, 2),)`.
+All these positions follow cell scale and rotation.
+
+See [Cells API](/neurona/reference/cells/) for defaults, and
+[Connections](/neurona/guides/connections/) for targeting ports.

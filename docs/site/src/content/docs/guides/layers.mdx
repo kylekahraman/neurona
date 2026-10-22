@@ -1,0 +1,52 @@
+---
+title: Regions and layers
+description: Position cells within independently defined laminar regions.
+---
+import Example from '../../../components/Example.astro';
+
+## Start with six cortical layers
+
+A `region` is a stack of `band` records. `cortical-layers()` supplies a
+six-layer neocortical preset. The stable IDs are `l1` through `l6`, regardless
+of whether the labels use Roman or Arabic numerals.
+
+<Example name="03-layers" />
+
+`site("ctx", "l5", 1.7)` places the soma halfway up layer V, 1.7 canvas units
+from the region's left edge. Add `depth: 0.2` to put it nearer the band's
+bottom. Depth ranges from 0 at the bottom to 1 at the top.
+
+## Define your own bands
+
+Import `band`, then replace `cortical-layers()` with a tuple such as:
+
+```typst
+(
+  band("deep", label: [Deep], height: 1, fill: rgb("e4eee8")),
+  band("upper", label: [Upper], height: 2, fill: rgb("f0f4f6")),
+)
+```
+
+List bands **bottom-to-top**. Each region has its own band IDs, position, and
+width. For `cortical-layers`, the optional `heights` and `fills` tuples are
+supplied **I-to-VI**; the constructor returns the stack in drawing order.
+
+Moving or resizing a layer moves cells placed with `site`. Dendrite lengths
+remain the values you set; they are not fitted to the layer boundaries.
+
+## Add a legend
+
+Set `legend: true` on the circuit. Use `legend-columns: 2` for two columns.
+A band's `name` adds a long legend name while its `label` can stay short.
+`show-layer-labels: false` on a region hides its edge labels without removing
+legend entries.
+
+## Example: CA1
+
+Define hippocampal strata with ordinary bands rather than the neocortical
+preset. This example combines layers, explicit paths, cells, and annotations.
+
+<Example name="hippocampal-layers" code={false} />
+
+The downloaded source includes the full scene. See
+[Layers API](/neurona/reference/layers/) for constructors and defaults.

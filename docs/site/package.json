@@ -1,0 +1,15 @@
+{
+  "name": "neurona-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare:examples": "python3 scripts/prepare_examples.py",
+    "dev": "npm run prepare:examples && astro dev",
+    "build": "npm run prepare:examples && astro build && python3 scripts/check_site.py",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.39.3",
+    "astro": "6.4.4"
+  }
+}

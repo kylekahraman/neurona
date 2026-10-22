@@ -1,0 +1,19 @@
+---
+import { Code } from '@astrojs/starlight/components';
+import examples from '../generated/examples.json';
+const { name, code = true } = Astro.props;
+const example = examples[name];
+if (!example) throw new Error(`Unknown documentation example: ${name}`);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<figure>
+  <div class="figure-panel">
+    <img src={`${base}/files/${name}.svg`} alt={example.alt} loading="lazy" />
+  </div>
+  <figcaption class="example-caption">{example.title}</figcaption>
+</figure>
+{code && <Code code={example.source} lang="typst" title={`examples/${name}.typ`} />}
+<p class="example-links">
+  <a href={`${base}/files/${name}.typ`} download>Typst source ↓</a>
+  <a href={`${base}/files/${name}.svg`} download>SVG ↓</a>
+</p>

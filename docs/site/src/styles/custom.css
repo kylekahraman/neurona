@@ -1,0 +1,34 @@
+:root {
+  --sl-color-accent-low: #122f2a;
+  --sl-color-accent: #76b8a2;
+  --sl-color-accent-high: #cde9dd;
+  --sl-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --sl-content-width: 52rem;
+}
+:root[data-theme='light'] {
+  --sl-color-accent-low: #e4eee8;
+  --sl-color-accent: #265b4d;
+  --sl-color-accent-high: #193d38;
+}
+.sl-markdown-content h2 { letter-spacing: -.02em; }
+.figure-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 12rem;
+  padding: 1.5rem;
+  background: #fff;
+  border: 1px solid #d9e0da;
+  border-radius: .5rem;
+}
+.figure-panel img { display: block; width: 100%; max-height: 23rem; object-fit: contain; }
+.example-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-size: .85rem; }
+.example-caption { font-size: .85rem; color: var(--sl-color-gray-2); }
+.gallery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-block: 1.5rem; }
+.gallery-card { padding: 1rem; border: 1px solid var(--sl-color-gray-5); border-radius: .5rem; text-decoration: none; }
+.gallery-card:hover { border-color: var(--sl-color-accent); }
+.gallery-card .figure-panel { min-height: 11rem; padding: 1rem; }
+.gallery-card img { height: 11rem; }
+.gallery-card h2 { font-size: 1.1rem; margin: 1rem 0 .25rem; }
+.gallery-card p { font-size: .85rem; color: var(--sl-color-gray-2); margin: 0; }
+@media (max-width: 40rem) { .gallery-grid { grid-template-columns: 1fr; } .figure-panel { padding: 1rem; } }

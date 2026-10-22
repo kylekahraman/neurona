@@ -1,0 +1,37 @@
+---
+title: Neurona
+description: Editable neuroscience diagrams in Typst.
+template: splash
+hero:
+  tagline: Neurons, circuits, layers, and experiments. Describe your figure in Typst and export vector artwork for papers and slides.
+  actions:
+    - text: Draw your first figure
+      link: /neurona/getting-started/first-figure/
+      icon: right-arrow
+    - text: Explore the gallery
+      link: /neurona/gallery/
+      variant: secondary
+---
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import Example from '../../components/Example.astro';
+
+<Example name="03-layers" code={false} />
+
+## What do you want to draw?
+
+<CardGrid>
+  <Card title="Cells and branches" icon="pencil">Choose a schematic cell, adjust its geometry, or draw your own neurites. [Draw cells →](/neurona/guides/cells/)</Card>
+  <Card title="Circuits and layers" icon="setting">Place cells in regions and connect named compartments with explicit paths. [Connect cells →](/neurona/guides/connections/)</Card>
+  <Card title="Experimental sequences" icon="right-arrow">Build stimulus panels, time axes, and parallel event tracks. [Create a timeline →](/neurona/guides/timelines/)</Card>
+  <Card title="A figure of your own" icon="document">Start from a complete example, edit its source, and export PDF, SVG, or PNG. [Browse examples →](/neurona/gallery/)</Card>
+</CardGrid>
+
+## Start small, compose as needed
+
+A few constructors are enough for a simple drawing. Cells, custom paths, layer
+stacks, population boxes, and connections share the same circuit canvas.
+Typst handles the text, and CeTZ supplies the vector drawing backend.
+
+This documentation describes the **development version**. Download the starter
+from [Installation](/neurona/getting-started/installation/) to try it today.
+Typst Universe publication is tracked under [Development](/neurona/development/).

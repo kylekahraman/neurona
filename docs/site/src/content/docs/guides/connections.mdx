@@ -1,0 +1,55 @@
+---
+title: Connections and ports
+description: Connect cell compartments and control the routes explicitly.
+---
+import Example from '../../../components/Example.astro';
+
+`projection(source, target)` describes a connection. The endpoints can be
+named cell ports, coordinates, or layer sites. Put the records in a circuit's
+`connections` tuple.
+
+## Connect two cells
+
+<Example name="02-connections" />
+
+`pc.axon` means “the axon port of the cell whose ID is `pc`”.
+`in.soma-west` addresses the left side of the other soma. Cell IDs must be
+unique and cannot contain dots.
+
+## Choose the terminal
+
+| `effect` | Terminal |
+| --- | --- |
+| `"excitatory"` (default) | Arrowhead |
+| `"inhibitory"` | Bar |
+| `"unspecified"` | Unmarked line |
+
+`target-gap` leaves clearance before a marked terminal reaches its target.
+It uses canvas units and does not move the target port itself.
+
+## Choose a target compartment
+
+All cells expose `soma`, `soma-west`, and `soma-east`. Built-in glyphs also
+provide `axon` and `dendrite`. Pyramidal and granule cells add `proximal`,
+`apical`, `tuft`, and `tuft-west`; pyramidal cells add `basal` and `ais`.
+
+A trunk port can put a connection inside the drawn arbor. To approach a
+pyramidal branch from outside, try `oblique-tip-west`, `oblique-tip-east`,
+`basal-tip-west`, or `basal-tip-east` and adjust the route.
+
+## Author the route
+
+Use `via: ((1, -1), (2, -1))` for polyline waypoints, or
+`controls: ((1, -2), (2, -2))` for a curve. Choose one routing method per
+projection. Waypoints and controls can also be cell ports or layer sites.
+
+Routes currently follow exactly the path you author. They do not avoid other
+cells or branches automatically. Inspect the result at its intended size,
+then adjust the waypoints, cell spacing, or target port.
+
+For a shared stem that branches, add a `junction` to the circuit and connect
+individual projections through its `center` port. An ordinary crossing has no
+junction or synapse unless you explicitly draw one.
+
+See [Circuits API](/neurona/reference/circuits/) for edge labels, weights,
+population boxes, and junctions.
